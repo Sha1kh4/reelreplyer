@@ -2,3 +2,4 @@
 /insta
 !.gitignore
 !app.py
+!req.txt
