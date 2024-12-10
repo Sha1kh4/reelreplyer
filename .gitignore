@@ -3,3 +3,5 @@
 !.gitignore
 !app.py
 !req.txt
+.vercel
+!example.jpeg

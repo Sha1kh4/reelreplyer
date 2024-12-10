@@ -67,6 +67,10 @@ SYMBL_APP_SECRET=your_symbl_app_secret
 
 5. The application will log in to your Instagram account, check for unread messages, download any video clips found, process them through the Symbl.ai API, and print out conversation summaries.
 
+## Example Usage
+
+![Example Usage](example.jpeg)
+
 ## Contributing
 
 Contributions are welcome! If you have suggestions for improvements or new features, feel free to fork the repository and submit a pull request.

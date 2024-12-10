@@ -82,7 +82,9 @@ def process_video(temp_file_path, access_token):
             with open(temp_file_path, "rb") as video_file:
                 response = requests.post(url, headers=headers, data=video_file, params={"name": "Uploaded Video"})
                 response.raise_for_status()
+                print(response.json())
                 return response.json()
+
         else:
             raise
 
@@ -91,6 +93,8 @@ def get_conversation_summary(conversation_id, access_token):
     """
     Retrieves the conversation summary from the Symbl API.
     """
+    time.sleep(10)
+    print(f'conversation id: {conversation_id}')
     url = f"https://api.symbl.ai/v1/conversations/{conversation_id}/summary"
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -98,8 +102,11 @@ def get_conversation_summary(conversation_id, access_token):
     }
     response = requests.get(url, headers=headers)
     response.raise_for_status()
-    return [item['text'] for item in response.json().get('summary', [])]
-
+    
+    # Ensure 'summary' is a list before accessing it
+    summary_data = response.json().get('summary', [])
+    print(summary_data)
+    return [item['text'] for item in summary_data if isinstance(item, dict)]
 
 def process_instagram_video(video_url):
     """
@@ -135,15 +142,20 @@ def main():
             # Fetch unread threads
             unread_threads = cl.direct_threads(amount=10, selected_filter="unread")
             for thread in unread_threads:
+                print("received thread")
                 # Fetch the most recent message in the thread
                 recent_message = thread.messages[0] if thread.messages else None
                 if recent_message.text:
                     print(f"Received message: {recent_message.text}")
                 if recent_message and recent_message.clip and recent_message.clip.video_url:
                     video_url = recent_message.clip.video_url
-                    # Process the video
+                    
+                    
+                    print(f'video url: {video_url}')
                     summary = process_instagram_video(video_url)
+                    print(f'summary: {summary}')
                     reply_message = "\n".join(summary)
+                    print(f'reply message: {reply_message}')
                     # Reply to the thread
                     cl.direct_answer(thread_id=thread.id, text=reply_message)
             # Wait before the next check
